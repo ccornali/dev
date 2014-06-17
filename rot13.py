@@ -3,15 +3,22 @@ import sys
 
 buf = cStringIO.StringIO()
 
-data = sys.stdin.read()
+ORD_A = ord('A')
+ORD_Z = ord('Z')
+ORD_a = ord('a')
+ORD_z = ord('z')
 
-for i in data:
-    if ord(i) >= 97 and ord(i) <= 122:
-        buf.write(chr(97 + (ord(i) - 97 + 13) % 26))
-    elif ord(i) >= 65 and ord(i) <= 90:
-        buf.write(chr(65 + (ord(i) - 65 + 13) % 26))
-    else:
-        buf.write(ord(i))
+with sys.stdin as inf:
+    data = inf.read()
+    for i in data:
+        ord_i = ord(i)
+        if ord_i >= ORD_A and ord_i <= ORD_Z:
+            buf.write(chr(ORD_A + (ord_i - ORD_A + 13) % 26))
+        elif ord_i >= ORD_a and ord_i <= ORD_z:
+            buf.write(chr(ORD_a + (ord_i - ORD_a + 13) % 26))
+        else:
+            buf.write(i)
+
 print buf.getvalue()
 
 buf.close()
