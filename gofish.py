@@ -112,7 +112,7 @@ class GoFish(object):
     def __init__(self, card):
             # creates gofish hand
             card = Card(rank, None)
-            super(GoFish,self)self._gf_hand = Hand.__init__
+            self._gf_hand = Hand.__init__
             pass
 
     def check_match(self, card_rank): # special class- gofish
