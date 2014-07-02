@@ -1,6 +1,7 @@
 #gofish.py
 import random
 
+# rank and suit class
 class Card(object):
     """ represents a standard plating card"""
 
@@ -11,73 +12,80 @@ class Card(object):
         # creates cards
         self._suit = suit
         self._rank = rank
-
+        # raise valueerror and typeerror
+    
     def __str__(self):
         """ Returns readable string representation"""
         return "%s%s" % (Card.rank_str[self._rank], Card.suit_str[self._suit])
 
-    def __cmp__(self, other):
-        # compares this card to other
-        # if this > other: returns positive number
-        # if other > this: returns negative number
-        # if equivalent: returns 0
-        return cmp(self._rank, other.rank)
+    def __eq__(self, other):
+        pass
+
+    def __ne__(self, other):
+        pass
 
 class Deck(object):
     """ Represents a deck of cars (list of Card objects) """
 
-    def __init__(self, card):
+    def __init__(self):
         # creates deck
-        self._card = card
         self._deck = []
 
     @staticmethod 
-    def make_basic_deck(self, num_decks = 1):
+    def make_basic_deck(num_decks = 1):
+        deck = Deck()
         # creates basic a basic deck with certain number of decks
         for i in range(num_decks):
             for suit in range(4):
                 for rank in range(13):
-                    #card_str = card.rank_str[rank] + card.suit_str[suit]
-                    self._deck.append(self._card.__str__)
-                    return self._deck
+                    deck.insert_card(Card(rank, suit))
+        return deck
 
     def shuffle(self):
-        # randomizes all 52 cards in deck
-        self._deck = random.shuffle(Deck.make_basic_deck(num_decks))
-        #shuffled_deck = random.shuffle(self.deck)
-        return self._deck
-    
-    def get_deck(self):
-        return self._deck
+        # randomizes all cards in deck
+        self._deck = random.shuffle(self._deck)
 
-    deck = property(get_deck)
+    def draw(self):
+        return self._deck.pop()
 
-class Dealer(object):
-    def __init__(self, deck):
-        # creates dealer
-        self._dealerdeck = deck
-    
-    def get_dealerdeck(self):
-        return self._dealerdeck
+    def insert_card(self, card):
+        self._deck.append(card)
 
-    dealerdeck = property(get_dealerdeck)
-    
-    def deal_(self, num_players = 2, num = 1):
-        # deals number of cards (num) out to each player (one at a time)
-        # returns list of dealt cards
-        dealerdeck = deck.shuffle()
-        player_hand = [dealerdeck[num::num_players] for num in range(0, num_players)] ###
-        return player_hand
+class Table(object):
+    def __init__(self, players):
+        self._players = players
 
-    def get_playerhand(self):
-        return player_hand
+    def announce(self, message):
+        pass
 
-    player_hand = property(get_playerhand)
-    
-    def remove_card(self):
-        # removes card/s from deck list via calling deal()
-        for i in deal(num_players, num):
-            print dealerdeck.pop([i])
+
+
+def play_go_fish(table):
+    # creates game with array of players and deals them cards
+    deck = Deck.make_basic_deck()
+    deck.shuffle()
+    for i in range(5):
+        for player in players:
+            player.receive_card(deck.draw())
+
+    for player in players:
+        player.sit_at_table(table)
+
+    i = 0
+    while True:
+        move = player[i].get_next_move()
+        if move == 'hey j, do you have any aces?':
+            cards = player[j].give_me('aces')
+            if cards is None:
+                player[j].receive_card(deck.draw())
+        i = (i + 1) % len(players)
+
+
+
+
+class Player(object):
+""" class of players that play Go Fish"""
+
 
 class Hand(object):
     """ contains subclass for game Go Fish! """
