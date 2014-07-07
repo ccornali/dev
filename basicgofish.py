@@ -153,14 +153,14 @@ def player_finish_rank(players):
     sorted_players = sorted(players, cmp=lambda x, y: x.count_books() > y.count_books())
     print "List of Finishing Places (Win to Lose): %s" % sorted_players
 
-def no_cheating(table, deck):
+def check_deck_contents(deck, players):
+    # if there are more copies of card than originally created: returns false
+    pass
+
+def no_cheating(deck, players):
     # scans through the deck and player's cards to make sure no one is lie and no one creates any new cards to cheat!
-    for player in Table.get_all_players():
-        if card in deck and player:
-            idx += 1
-            if idx > (len(deck)/52):
-                print "Cheater %s" % player
-                player.remove_cards_from_hand(card)
+    # if check_deck_contents(deck, players) is false: removes the add/created card from the player's hand
+    pass
 
 class Player(Deck):
     """ class of players, stores players name and hand"""
