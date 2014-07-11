@@ -88,35 +88,49 @@ def play_go_fish(table):
     # creates Go Fish game and has all the logic
     deck = Deck.make_basic_deck()
     deck.shuffle()
+
     # deals players hand of cards
     for i in range(5):
         for player in players:
             player.add_cards_to_hand(deck.draw())
-            get_go_fish_hand(player)
-            player.seat_at_table()
+            player_count += 1
+
+    # creates the table object for Go Fish, holds all the player objects of the game
+    game_table = Table(players, player_count)
 
     # start to play the game
     i = 0
     while True:
-        while opponent_player == player[i]:
-            opponent_player = random.choice(Table.get_all_players())
-            
-        ran_cardrank = deck.gen_ran_cardrank()
-        card = Card(ran_cardrank, None)
+        if not no_player_cheated(deck, game_table):
+        while True:
+            # while loop generates a random player(opponent_player) for player[i] to play
+            # loop continues to get random player if the opponent_player is player[i]
+            opponent_player = random.choice(player)
+            if opponent_player != player[i]:
+                break
+        # generates a random suit from rank_str
+        ran_rank = random.choice(rank_str)
 
-        while search_hand(opponent_player, card):
-            tmp = opponent_player.remove_cards_from_hand(card)
-            player[i].add_cards_to_hand(tmp)
-            if tmp is None:
-                print "Go Fish, %s take card from deck" % player[i]
-                player[i].add_cards_to_hand(deck.draw())
+        # checks to see if oppoenet_player's hand contains cards with the desired suit(ran_rank)
+        if opponent_player.has_rank(ran_rank):
+            # set cards equal to list of the cards oppoent_player has with the same rank
+            cards = opponent_playercards_with_rank(ran_rank)
+            # counter for the number of cards that match ran_rank in opponent_player
+            count = len(cards)
+            # generates random number of cards to remove from opponent_player's hand
+            num_to_take = random(1,count)
+        
+        # func to remove cards for certain num and dont take all cards from opponent_player
+        for x in range(num_to_take):
+            rm_card = random.choice(cards)
+            player[i].remove_cards(opponent_player, rm_card)
+
         i = (i + 1) % len(players)
 
         if deck.check_deck_size == 0:
             print "Game over!"
             # winner is the player with the most books
             player_finish_rank(Table.get_all_players())
-            
 
 def get_go_fish_hand(player):
     # converts players hand to cards with no suits, just rank
@@ -130,15 +144,13 @@ def search_hand(player, card):
     # if cards in player hand: return True
     pass 
 
-def remove_cards_from_hand(cards):
-    # removes cards from player's hand
-    # if search_hand True: remove cards and return list
-    # else: return None
-    pass
+def remove_cards(player, cards):
+    # removes cards from players hand
+    player.pop(cards)
 
-def add_cards_to_hand(cards):
+def add_cards_to_hand(player, cards):
     # gets list of cards from function get_cards_from_player and appends card to hand
-    pass
+    player.append(cards)
 
 def player_finish_rank(players):
     # scans through all player's hands to determine winner
@@ -153,14 +165,24 @@ def player_finish_rank(players):
     sorted_players = sorted(players, cmp=lambda x, y: x.count_books() > y.count_books())
     print "List of Finishing Places (Win to Lose): %s" % sorted_players
 
-def no_cheating(table, deck):
-    # scans through the deck and player's cards to make sure no one is lie and no one creates any new cards to cheat!
-    for player in Table.get_all_players():
-        if card in deck and player:
-            idx += 1
-            if idx > (len(deck)/52):
-                print "Cheater %s" % player
-                player.remove_cards_from_hand(card)
+def no_player_cheated(deck, players):
+    # makes sure no new cards were created, if cheating occured, returns false
+    num_card_copies = (len(deck)/52.0)
+    # scans through the deck and players to check the number of copies and counts the copies
+    # if there are more copies of card than originally created:
+        # removes created card from player's hand and returns false
+    card_deck_copies = 0
+    card_player_copies = 0
+    for i in range(len(deck)):
+        if Card in deck:
+            card_deck_copies += 1
+        for player in players:
+            if Card in player:
+                card_player_copies += 1
+            if card_deck_copies + card_player_copies >= num_card_copies:
+                player.hand.pop(Card)
+                return False
+    return True
 
 class Player(Deck):
     """ class of players, stores players name and hand"""
@@ -173,10 +195,6 @@ class Player(Deck):
     def get_hand(self):
         #returns players hand
         return self.hand
-
-    def seat_at_table(self):
-        # places player at Table object
-        pass
 
     def __str__(self):
         """ String representation of player object"""
