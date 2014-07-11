@@ -160,7 +160,7 @@ def play_go_fish(table):
             opponent_player = random.choice(Table.get_all_players())
             
         ran_cardrank = deck.gen_ran_cardrank()
-        cards = Card(ran_cardrank, 0)
+        cards = Card(ran_cardrank, )
 
         opponent_player_hand = opponent_player.get_player_hand()
         
@@ -184,6 +184,30 @@ def play_go_fish(table):
 
             sorted_players = sorted(players, cmp=lambda x, y: x.count_books() > y.count_books())
             print "List of Finishing Places (Win to Lose): %s" % sorted_players
+
+def search_hand(player, cards):
+    # search player[i] hand for cards
+    # if cards in player hand: return True
+    pass 
+
+def get_cards_from_player(player, cards):
+    # removes (using pop()) cards from player's hand
+    # if search_hand True: remove cards and return list
+    # else: return None
+    pass
+
+def find_winner(players):
+    # scans through all player's hands to determine winner
+    #player with most books is the winner
+    pass
+
+def no_cheating(table, deck):
+    for player in Table.get_all_players():
+    if card in deck and player:
+        idx += 1
+        if idx > (len(deck)/52.0):
+            print "Cheater %s" % player
+            player.remove_cards_from_hand(card)
 
 class Player(Deck):
     """ class of players that play Go Fish"""
